@@ -4,10 +4,16 @@ open Bap_primus.Std
 
 include Self ()
 
-let unused = Primus.Machine.State.declare
+type results = {
+    used : Addr.Set.t;
+    unused : string Addr.Map.t;
+  }
+
+let results = Primus.Machine.State.declare
     ~name:"subroutines-results"
     ~uuid:"af66d451-fb62-44c3-9c2a-8969e111ad91"
-    (fun _ -> Map.empty (module Addr))
+    (fun _ -> {used = Set.empty (module Addr);
+            unused = Map.empty (module Addr)})
 
 type stacks = {
     stacks : Primus.value list Primus.Value.Map.t;
@@ -24,18 +30,13 @@ module Notify_used(Machine : Primus.Machine.S) = struct
   open Machine.Syntax
 
   [@@@warning "-P"]
-  let run [name; addr] =
-    Value.Symbol.of_value name >>= fun name ->
+  let run [_name; addr] =
     let addr = Value.to_word addr in
     if Addr.is_zero addr then Value.b1
     else
-      Machine.Global.get unused >>= fun s ->
-      if Map.mem s addr then
-        printf "Detects using result of function %s called at %s\n%!" name
-          (Addr.to_string addr);
-      Machine.Global.put unused (Map.set s addr name) >>= fun () ->
+      Machine.Global.update results ~f:(fun s ->
+          {s with used = Set.add s.used addr}) >>= fun () ->
       Value.b1
-
 end
 
 module Notify_unused(Machine : Primus.Machine.S) = struct
@@ -48,14 +49,32 @@ module Notify_unused(Machine : Primus.Machine.S) = struct
     let addr = Value.to_word addr in
     if Addr.is_zero addr then Value.b1
     else
-      Machine.Global.get unused >>= fun s ->
-      if not @@ Map.mem s addr then
-        printf "Detected unused result from function %s called at %s\n%!" name
-          (Addr.to_string addr);
-      Machine.Global.put unused (Map.set s addr name) >>= fun () ->
+      Machine.Global.update results ~f:(fun s ->
+          {s with unused = Map.set s.unused addr name}) >>= fun () ->
       Value.b1
 
 end
+
+module Notify(Machine : Primus.Machine.S) = struct
+  module Value = Primus.Value.Make(Machine)
+  open Machine.Syntax
+
+  let on_halt () =
+    Machine.forks () >>= fun forks ->
+    if Seq.length forks = 1 then
+      Machine.Global.get results >>= fun s ->
+      Map.iteri s.unused ~f:(fun ~key:addr ~data:name ->
+          if not (Set.mem s.used addr) then
+            printf "Detects unused result of function %s called at %s\n%!" name
+              (Addr.pps () addr));
+      Machine.return ()
+    else
+      Machine.return ()
+
+  let init () = Primus.Interpreter.halting >>> on_halt
+
+end
+
 
 module Output_arg(Machine : Primus.Machine.S) = struct
   module Value = Primus.Value.Make(Machine)
@@ -174,4 +193,6 @@ module Interface(Machine : Primus.Machine.S) = struct
 end
 
 let () = Config.when_ready (fun {Config.get=(!)} ->
-             Primus.Machine.add_component (module Interface))
+             Primus.Machine.add_component (module Interface);
+             Primus.Machine.add_component (module Notify);
+           )

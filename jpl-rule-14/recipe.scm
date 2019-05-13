@@ -13,6 +13,7 @@
 (option primus-promiscuous-mode)
 (option primus-greedy-scheduler)
 (option primus-limit-max-length $depth)
+(option run-entry-points ${entry-points})
 
 (option primus-lisp-add $prefix)
 (option primus-print-output unused-result.incidents)

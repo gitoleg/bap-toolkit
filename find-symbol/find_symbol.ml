@@ -88,7 +88,7 @@ let report_symbol symtab addr reasons =
   match Symtab.find_by_start symtab addr with
   | None -> ()
   | Some (name,_,_) ->
-    printf "%-15s %a [" name Addr.pp addr;
+    printf "%-16s %a [" name Addr.pp addr;
     match reasons with
     | [reason] -> printf "%s]\n" @@ string_of_reason reason
     | reasons ->
