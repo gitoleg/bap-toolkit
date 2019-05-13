@@ -31,13 +31,16 @@
   (let ((sub (dict-get 'maybe-unused taint))
         (read (dict-has 'was-read taint))
         (callee (dict-get 'call-site taint)))
+    ;; (when (and sub read)
+    ;;   (notify-used-result sub callee)
+    ;;   (dict-del 'maybe-unused taint))
     (when (and sub (not read))
       (notify-unused sub callee)
       (dict-del 'maybe-unused taint))))
 
 (defun notify-unused (sub addr)
   (notify-unused-result sub addr)
-  (incident-report 'value-was-not-used sub))
+  (incident-report 'value-was-not-used (incident-location)))
 
 (defun is-ignored (name)
   (is-in name

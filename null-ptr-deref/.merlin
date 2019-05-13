@@ -1,0 +1,7 @@
+PKG core_kernel
+PKG bap
+PKG bap-primus
+PKG bap-x86-cpu
+
+S .
+B _build/

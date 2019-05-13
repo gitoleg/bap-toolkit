@@ -1,0 +1,6 @@
+PKG core_kernel
+PKG bap
+PKG bap-primus
+
+S .
+B _build/

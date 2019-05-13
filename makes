@@ -99,7 +99,17 @@ def find_main(target):
             mainf = find(files, lambda f: string.find(f, "main") != -1 )
             return find([same1,same2,mainf], lambda f: f != None)
 
+def path_of_list(xs):
+    if xs == []: return None
+    full = xs.pop(0)
+    for x in xs:
+        full = path.join(full, x)
+    return full
 
+# TODO: need to fix parsing: doesn't work well with many nested modules.
+# e.g. in dune pkg
+# TODO: also, as an idea, we can take a look at *.cmi files
+# to be sure we don't expose anything beyond interface
 def parse_meta(p):
     meta = path.join(p, "META")
     if not path.exists(meta): return None
@@ -111,36 +121,46 @@ def parse_meta(p):
     cma = None
     fld = None
     lib = path.basename(p)
-    pkg = lib
+    pkg = [lib]
     for line in lines:
         if line == '' or line[0]  == '#': continue
         p_i = line.find('package')
         f_i = line.find('directory')
         a_i = line.find('archive')
         if p_i == 0:
-            data.append((pkg, fld, cma))
-            pkg = unquote(line.split()[1]).strip()
-            pkg = '%s.%s' % (lib, pkg)
+            if cma != None:
+                name = string.join(pkg, '.')
+                data.append((name, fld, cma))
+            pkg.append(unquote(line.split()[1]).strip())
             fld = None
             cma = None
-        if f_i != -1:
+        if f_i == 0:
             fld = unquote(line.split('=')[1]).strip()
-        if a_i != -1:
+        if a_i == 0:
             s = line.find('(', a_i)
             f = line.find(')', s)
             if s != -1 and f != -1:
                 if line[s:f].find('byte') != -1:
                     cma = unquote(line.split('=')[1]).strip()
             if cma == '': cma = None
-    data.append((pkg, fld, cma))
+        if line.strip() == ')':
+            name = string.join(pkg, '.')
+            data.append((name, fld, cma))
+            fld = None
+            cma = None
+            pkg.pop()
+    name = string.join(pkg, '.')
+    data.append((name, fld, cma))
     return data
 
-# delete it
+# TODO: delete it, debug only
 cmas = []
 
-
+# Converts module names with underscores to the dot notation:
+# A__B__c --> A.B__c
 def restore_module_name(line):
     line = line.strip()
+    if line.find('__') == -1: return line
     parts = []
     i = 0
     while (i + 2 < len(line)):
@@ -220,6 +240,7 @@ def build_ml_target(modules, target):
         plugin = path.splitext(main)[0] + ".plugin"
         cmd = "bapbuild %s %s" % (pkgs, plugin)
         r = run_cmd(cmd, target['path'])
+        run_cmd('bapbundle update -desc \"%s\" %s' % (target['descr'], plugin), target['path'])
         return r
 
 
@@ -252,7 +273,7 @@ def parse_target(target):
     recipe = path.join(target, "recipe.scm")
     full = path.join(path.abspath(os.curdir), target)
     exts = find_recipe_extends(recipe)
-    x = {'name':path.basename(target), 'path':full, 'desc':"",'deps':[],'exts':exts}
+    x = {'name':path.basename(target), 'path':full, 'descr':"",'deps':[],'exts':exts}
     if path.exists(info):
         f = open(info)
         lines = f.readlines()
@@ -263,7 +284,7 @@ def parse_target(target):
             elif string.strip(fields[0]) == "main":
                 x['main'] = string.strip(fields[1])
             elif string.strip(fields[0]) == "descr":
-                x['desc'] = string.strip(fields[1])
+                x['descr'] = string.strip(fields[1])
             elif string.strip(fields[0]) == "depends":
                 x['deps'].append(string.strip(fields[1]))
             else: continue
@@ -282,10 +303,12 @@ def test(recipe_list):
 
 def pack(target):
     cur = path.abspath(os.curdir)
+    if not path.exists(path.join(target['path'], 'recipe.scm')):
+        return
     os.chdir(target['path'])
     zipf = zipfile.ZipFile(target['name'] + '.recipe', 'w', zipfile.ZIP_DEFLATED)
     for f in os.listdir(target['path']):
-        if f in ["descr", "stdin", "stdout"] or is_lisp_file(f) or is_scm_file(f):
+        if f in ["descr", "stdin", "stdout", "stderr"] or is_lisp_file(f) or is_scm_file(f):
             zipf.write(f)
     zipf.close()
     os.chdir(cur)
@@ -380,7 +403,8 @@ def is_ml_powered_host():
     return res == []
 
 
-#   DST=/usr/local/share/bap OR/AND cp command
+# TODO:  make an option to choose the destination
+# DST=/usr/local/share/bap OR/AND cp
 def install_destination():
     pass
 
@@ -415,7 +439,6 @@ def parse_args():
 
 
 def run_command(has_ml_power, command, targets):
-    print "run cmd %s for %s:" % (command, targets)
     if   command == 'build': build(has_ml_power, targets)
     elif command == 'clean': clean(has_ml_power, targets)
     elif command == 'install': install(has_ml_power, targets)
@@ -425,17 +448,19 @@ def run_command(has_ml_power, command, targets):
         print "error: unknown command %s, exiting ..." % command
         exit(1)
 
-#TODO add prefix to commands ??
+#TODO a prefix to commands ??
 if __name__ == '__main__':
     commands, targets = parse_args()
     args = sys.argv
     has_ml_power = is_ml_powered_host()
     map(lambda c: run_command(has_ml_power, c, targets), commands)
 
-
-# data = parse_meta("/home/oleg/.opam/4.07.1/lib/dune")
+# data = parse_meta("/home/oleg/.opam/4.07.1/lib/zarith")
 # for x,y,z in data:
 #     print "%s %s %s" % (x, y, z)
+
+# modules = {}
+# read_lib("/home/oleg/.opam/4.07.1/lib/zarith", modules)
 
 # modules = collect_modules()
 # for m,lib in modules.items():
