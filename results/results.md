@@ -1,12 +1,12 @@
 
-  |                  |                                                                                                   |
+
   |   Artifacts      |                            Checks                                                                 |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | httpd-2.4.18     | ### Forbidden:                                                                                    |
+  | httpd-2.4.18     | **Forbidden:**                                                                                    |
   |                  | __errno_location abort atoi atol exit fprintf freopen getenv printf putchar puts sscanf           |
   |                  |                                                                                                   |
-  |                  | ### Recursive:                                                                                    |
+  |                  | **Recursive:**                                                                                    |
   |                  | ap_abort_on_oom ap_add_module_commands ap_die ap_rgetline_core                                    |
   |                  | ap_rxplus_exec ap_soak_end_container ap_strcasecmp_match ap_strcmp_match                          |
   |                  | child_main clean_child_exit count_directives_sub parse_errorlog_item                              |
@@ -14,7 +14,7 @@
   |                  | sub_45aa86 sub_45da01 sub_478d3d sub_48384a                                                       |
   |                  | sub_483ce2 sub_486162                                                                             |
   |                  |                                                                                                   |
-  |                  | ### Complexity:                                                                                   |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | ap_core_output_filter ap_directory_walk ap_get_mime_headers_core ap_http_filter                   |
   |                  | ap_process_async_request ap_process_request_internal ap_read_request                              |
   |                  | ap_scan_script_header_err_core_ex ap_select_protocol ap_set_byterange                             |
@@ -24,11 +24,11 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | libbfd-2.31.1    | Forbidden:                                                                                        |
+  | libbfd-2.31.1    | **Forbidden:**                                                                                    |
   |                  | __errno_location abort ctime exit fclose ferror fflush fprintf fputc fputs fread fwrite           |
   |                  | getenv printf sprintf sscanf time vfprintf                                                        |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | _bfd_archive_64_bit_slurp_armap _bfd_coff_final_link _bfd_coff_gc_mark.part.11.constprop.14       |
   |                  | _bfd_elf_adjust_dynamic_symbol _bfd_elf_compute_section_file_positions _bfd_elf_gc_mark           |
   |                  | _bfd_elf_get_property _bfd_elf_make_section_from_shdr _bfd_elf_write_object_contents              |
@@ -50,7 +50,7 @@
   |                  | sub_b4000 sub_b473f sub_b49b8 sub_b4b35 sub_b545e sub_b9fe7 sub_bc4d6 sub_c4618                   |
   |                  | sub_c4640 sub_c5bd6 sub_c7f22 sub_c987b sub_d1cd8 sub_e9bb1                                       |
   |                  |                                                                                                   |
-  |                  | Complexity:                                                                                       |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | _bfd_dwarf2_find_nearest_line _bfd_elf_discard_section_eh_frame _bfd_elf_map_sections_to_segments |
   |                  | _bfd_elf_merge_symbol _bfd_elf_slurp_version_tables _bfd_generic_link_output_symbols              |
   |                  | _bfd_link_section_stabs _bfd_merge_sections _bfd_stab_section_find_nearest_line                   |
@@ -68,7 +68,7 @@
   |                  | sub_b0b07 sub_b272d sub_b5baf sub_b6dc9 sub_bb34a sub_bcb04 sub_be4c2 sub_c21d9                   |
   |                  | sub_c2b82 sub_c48f0 sub_caadd sub_cd959 sub_d1682 sub_dc4a6 sub_e4b5b                             |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | _bfd_abort sub_bbcc1 sub_e2b51                                                                    |
   |                  |                                                                                                   |
   |                  |                                                                                                   |
@@ -81,27 +81,27 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | lighttpd-1.4.15  | Forbidden:                                                                                        |
+  | lighttpd-1.4.15  | **Forbidden:**                                                                                    |
   |                  | __errno_location abort exit fprintf fputc fputs fwrite getenv gmtime                              |
   |                  | puts setlocale signal strftime localtime mktime perror time                                       |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | array_init array_insert_uniq data_string_init proc_open_b                                         |
   |                  | sub_1163c sub_12091 sub_14d5 sub_1eee0 sub_1eee7 sub_bf08                                         |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | connection_handle_read_state sub_12091 sub_121be sub_18774                                        |
   |                  | sub_74e9 sub_97a2                                                                                 |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | fdevent_poll_event_get_revent                                                                     |
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | nginx-1.7        | Forbidden:                                                                                        |
+  | nginx-1.7        | **Forbidden:**                                                                                    |
   |                  | __errno_location abort exit getenv localtime mktime raise rename strftime time                    |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | sub_4077f4 sub_409103 sub_409250 sub_4093A0 sub_409FA0 sub_40A7A0 sub_40A8D0 sub_40AEA0           |
   |                  | sub_40DAB0 sub_40DEC0 sub_411970 sub_412273 sub_418500 sub_41c0a4 sub_41c0ab sub_41c100           |
   |                  | sub_41d0b4 sub_4288e1 sub_42AC50 sub_4305E0 sub_430830 sub_430990 sub_430B70 sub_430DC0           |
@@ -110,7 +110,7 @@
   |                  | sub_45f060 sub_460da8 sub_460f83 sub_460fd8 sub_4621a1 sub_469a11 sub_46eecc sub_471B10           |
   |                  | sub_472b16 sub_47339a sub_473895 sub_479753 sub_47A870 sub_47ecd0 sub_48E510                      |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | sub_40FD90 sub_40c042 sub_416590 sub_418500 sub_41e7be sub_422BB0 sub_427A00 sub_430f6c           |
   |                  | sub_433710 sub_435da0 sub_43C5E0 sub_441D50 sub_443a40 sub_44A180 sub_44f36a sub_450E90           |
   |                  | sub_455df8 sub_45D180 sub_45a6a4 sub_46249d sub_463428 sub_46784a sub_469E70 sub_46BB70           |
@@ -118,7 +118,7 @@
   |                  | sub_482960 sub_483C60 sub_4856B0 sub_486860 sub_48bc90 sub_48f567 sub_490470 sub_491F80           |
   |                  | sub_493797                                                                                        |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | sub_41B810 sub_425800 sub_426600 sub_426D00                                                       |
   |                  | sub_4273F0 sub_427A00 sub_47ecd0                                                                  |
   |                  |                                                                                                   |
@@ -128,12 +128,12 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | ntpd-4.2.8p5     | Forbidden:                                                                                        |
+  | ntpd-4.2.8p5     | **Forbidden:**                                                                                    |
   |                  | __errno_location abort ctime exit fclose ferror fflush fgetc fgets fopen fprintf fputc            |
   |                  | fputs fread freopen fscanf fwrite getenv gmtime localtime mktime perror printf putchar            |
   |                  | puts rename rewind setvbuf sprintf sscanf strftime system time vfprintf                           |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | addArgListEntry adj_systime ao_malloc.part.30 ao_strdup.part.29                                   |
   |                  | change_logfile check_gen_fifo_consistency copy_addrinfo_list_impl ctl_putuint                     |
   |                  | ctl_putunqstr destroy_address_node dump_config_tree env_presets                                   |
@@ -151,7 +151,7 @@
   |                  | sub_6c094 sub_6d1f9 teljjy_control unload_arg_list                                                |
   |                  | update_interfaces                                                                                 |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | acts_receive arc_receive clock_select free_all_config_trees                                       |
   |                  | getCmdOpts gpsd_receive hack_restrict jsmn_parse                                                  |
   |                  | opt_find_long optionSetMembers read_network_packet sub_1246f                                      |
@@ -159,7 +159,7 @@
   |                  | sub_49b86 sub_622e8 sub_6c098 sub_6d1f9 sub_71589 sub_72ad3 sub_73522 sub_f7a6                    |
   |                  | timer update_interfaces yylex                                                                     |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | findexistingpeer getCmdOpts local_clock normal_dtoa                                               |
   |                  | optionRestore option_exits start_blocking_thread_internal sub_11deb                               |
   |                  | sub_1da6d sub_55f6f sub_69208 sub_6d1f9                                                           |
@@ -167,12 +167,12 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | ntpdc-4.2.8p5    | Forbidden:                                                                                        |
+  | ntpdc-4.2.8p5    | **Forbidden:**                                                                                    |
   |                  | __errno_location abort ctime exit fclose ferror fflush fgetc fgets fopen fprintf fputc            |
   |                  | fputs fread freopen fwrite getenv gmtime localtime longjmp perror printf putchar puts             |
   |                  | rename setbuf sprintf sscanf strftime system time vfprintf                                        |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | addArgListEntry ao_malloc.part.30 ao_strdup.part.29 do_env_opt                                    |
   |                  | docmd env_presets ereallocz freesymkey                                                            |
   |                  | genshelloptUsage initialize_action isc__strerror isc_error_runtimecheck                           |
@@ -184,30 +184,30 @@
   |                  | sub_e424 sub_e694 sub_e854 sub_e980 sub_eb84 sub_edb4 sub_f38c sub_f5f8                           |
   |                  | sub_f7f0 sub_fd30 sub_fe00 unload_arg_list                                                        |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | doquery opt_find_long sub_162a8 sub_17409 sub_1b799 sub_1cce3 sub_1d732 sub_226b8                 |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | optionRestore option_exits quit sub_13418 sub_17409                                               |
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | openssl-1.1.0    | Forbidden:                                                                                        |
+  | openssl-1.1.0    | **Forbidden:**                                                                                    |
   |                  | __errno_location exit fclose fflush fgets fprintf fputc fputs                                     |
   |                  | fwrite getenv perror printf putchar puts rename setbuf signal time                                |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | app_malloc do_revoke dump_certs_pkeys_bag generate_cookie_callback                                |
   |                  | print_ssl_summary sub_45bed sub_45f45 sub_473b0                                                   |
   |                  | sub_4ffb6 sub_4ffd0 sub_50078 sub_5636d sub_58d90 sub_5d3b3 sub_5d818 sub_5f053                   |
   |                  | sub_67160 sub_671a5                                                                               |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | ca_main dgst_main do_body enc_main engine_main ocsp_main req_main s_server_main                   |
   |                  | smime_main srp_main sub_38c7c sub_3fdef sub_4b5a8 sub_4e510 sub_51459 sub_58d90                   |
   |                  | sub_5d3b3 sub_671b2 sub_6968c sub_715b6 www_body x509_main                                        |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | main                                                                                              |
   |                  |                                                                                                   |
   |                  |                                                                                                   |
@@ -215,14 +215,14 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | samba-4.7.6      | Forbidden:                                                                                        |
+  | samba-4.7.6      | **Forbidden:**                                                                                    |
   |                  | __errno_location exit fprintf fwrite                                                              |
   |                  | printf puts signal time                                                                           |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | recursive_delete sig_term                                                                         |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | binary_smbd_main                                                                                  |
   |                  |                                                                                                   |
   |                  |                                                                                                   |
@@ -233,11 +233,11 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | smtpd-5.7.3p2    | Forbidden:                                                                                        |
+  | smtpd-5.7.3p2    | **Forbidden:**                                                                                        |
   |                  | __errno_location ctime exit fclose feof ferror fflush fopen fprintf fputc fread fseek fwrite      |
   |                  | getenv localtime perror printf rename time vfprintf                                               |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | __xcalloc _rs_stir bounce_delivery ca                                                             |
   |                  | ca_init child_add expandtree_RB_INSERT_COLOR fatal                                                |
   |                  | filter_extend_chain fsqueue_envelope_path.constprop.4 fsqueue_message_incoming_path.constprop.7   |
@@ -252,11 +252,11 @@
   |                  | sub_40210 sub_40214 sub_414ac sub_41efe sub_471c8 sub_47221 sub_47ad0 sub_47ad4                   |
   |                  | sub_47bcd sub_48773 sub_487d3 sub_7ebf sub_94f1 sub_af10 sub_af14 sub_c247 sub_e5a0 sub_e5a4      |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | envelope_ascii_dump envelope_load_buffer mta_connect sub_18014                                    |
   |                  | sub_1a9b6 sub_40eb2 sub_410c2 sub_49e34 yylex                                                     |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | queue_proc_call queue_proc_envelope_walk scheduler_proc_call sub_40eb2 sub_410c2 table_proc_call  |
   |                  |                                                                                                   |
   |                  |                                                                                                   |
@@ -264,12 +264,12 @@
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
   | sqlite3-2.27.2   |                                                                                                   |
-  |                  | Forbidden:                                                                                        |
+  |                  | **Forbidden:**                                                                                    |
   |                  | __errno_location atoi exit fclose fflush fgetc fgets fprintf                                      |
   |                  | fputc fputs fread fseek ftell fwrite getenv localtime                                             |
   |                  | printf putchar puts raise rewind setvbuf signal system time                                       |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | SortByDimension SortByDistance btreeOverwriteContent btreePrevious                                |
   |                  | btreeRestoreCursorPosition checkTreePage clearDatabasePage columnTypeImpl                         |
   |                  | deleteCell do_meta_command dupedExprSize eqp_render_level                                         |
@@ -308,7 +308,7 @@
   |                  | vdbeMergeEngineFree vdbeMergeEngineInit.isra.301 vdbePmaReadBlob vdbePmaReaderNext                |
   |                  | walkExpr whereLoopAddBtreeIndex whereLoopAddOr whereUsablePartialIndex                            |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | allocateBtreePage do_meta_command exprAnalyze fts3InitVtab                                        |
   |                  | fts3SnippetFunc fts5MultiIterNew fts5PorterCb openDatabase                                        |
   |                  | pagerWalFrames porterNext process_input selectExpander                                            |
@@ -319,10 +319,10 @@
   |                  | sub_82bf7 sub_a160d sub_a417c sub_a538a sub_a6f32 sub_a993b sub_aafb1 unixOpen                    |
   |                  | whereLoopAddBtree wherePathSatisfiesOrderBy                                                       |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | sub_4de4e sub_62b49 sub_83d0a sub_852fe sub_8f005 sub_9192f sub_ae05c                             |
   |                  |                                                                                                   |
-  |                  | Null pointer dereference:                                                                         |
+  |                  | **Null pointer dereference:**                                                                     |
   |                  | |----------|-------------------------|                                                            |
   |                  | | Address  | Function                |                                                            |
   |                  | |----------|-------------------------|                                                            |
@@ -347,11 +347,11 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | sshd-7.3.p1      | Forbidden:                                                                                        |
+  | sshd-7.3.p1      | **Forbidden:**                                                                                    |
   |                  | __errno_location abort ctime exit fclose feof fflush fgetc fgets fopen fputc fputs fscanf         |
   |                  | fwrite getenv localtime perror putchar puts raise rename rewind sscanf strftime time              |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | BSDgetopt Blowfish_expand0state _rs_stir a2tun                                                    |
   |                  | addr_match_list atomicio auth2_challenge auth2_update_methods_lists                               |
   |                  | auth_debug_add auth_openfile auth_rhosts authorized_principals_file                               |
@@ -392,16 +392,16 @@
   |                  | sub_a1b1 sub_a4aa sub_b0cf sub_b171 sub_b2a9 sub_b424 sub_bbf7 sub_bc05                           |
   |                  | sub_d0c0 subprocess.isra.1.part.2 userauth_finish xstrdup                                         |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | auth_parse_options copy_set_server_options fill_default_server_options hostkeys_foreach           |
   |                  | monitor_child_postauth session_input_channel_req sftp_server_main ssh_krl_from_blob               |
   |                  | sub_48db6 sub_60bcf sub_8e7f sub_a5bf                                                             |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | grace_alarm_handler log_init monitor_child_postauth server_input_channel_open                     |
   |                  | session_input_channel_req sub_497ec sub_5f830 sub_5fd20 userauth_pubkey                           |
   |                  |                                                                                                   |
-  |                  | Null pointer dereference:                                                                         |
+  |                  | **Null pointer dereference:**                                                                     |
   |                  | |----------|-------------------------|                                                            |
   |                  | | Address  | Function                |                                                            |
   |                  | |----------|-------------------------|                                                            |
@@ -415,12 +415,12 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | swfc-0.9.2       | Forbidden:                                                                                        |
+  | swfc-0.9.2       | **Forbidden:**                                                                                    |
   |                  | __errno_location clearerr ctime exit fclose feof ferror fflush                                    |
   |                  | fopen fprintf fputc fputs fread fseek ftell fwrite getenv perror printf putchar                   |
   |                  | puts rename sprintf time                                                                          |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | _trie_dump _trie_put add_parent args_callback_longoption                                          |
   |                  | as3__scan_bytes as3_ensure_buffer_stack callcode cut_last_push                                    |
   |                  | dump_asset dump_method enter_file enumerateUsedIDs                                                |
@@ -432,13 +432,13 @@
   |                  | swf_ShapeSetLine swf_WriteTag use_asset write_asset                                               |
   |                  | yy_scan_bytes yyensure_buffer_stack                                                               |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | enumerateUsedIDs png_load png_write_palette_based2 writeABC                                       |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | zlib_error                                                                                        |
   |                  |                                                                                                   |
-  |                  | Null pointer dereference:                                                                         |
+  |                  | **Null pointer dereference:**                                                                     |
   |                  | |-----------------------------------|                                                             |
   |                  | | Address   | Function              |                                                             |
   |                  | |-----------|-----------------------|                                                             |
@@ -474,17 +474,17 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | swfcombine-0.9.2 | Forbidden:                                                                                        |
+  | swfcombine-0.9.2 | **Forbidden:**                                                                                    |
   |                  | __errno_location ctime exit fclose fflush fopen fprintf fputc fread fseek                         |
   |                  | ftell fwrite getenv perror printf putchar puts rename sprintf time                                |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | args_callback_longoption enumerateUsedIDs sub_2b7c swf_WriteTag                                   |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | enumerateUsedIDs main normalcombine write_master                                                  |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | main zlib_error                                                                                   |
   |                  |                                                                                                   |
   |                  |                                                                                                   |
@@ -492,38 +492,38 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | swfextract-0.9.2 | Forbidden:                                                                                        |
+  | swfextract-0.9.2 | **Forbidden:**                                                                                    |
   |                  | __errno_location ctime exit fclose feof fflush fopen fprintf fputc fputs fread fseek              |
   |                  | ftell fwrite getenv perror printf putchar puts rename sprintf time                                |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | _trie_dump _trie_put args_callback_longoption callcode cut_last_push dump_asset                   |
   |                  | dump_method enumerateUsedIDs free_lines input registry_find registry_use                          |
   |                  | sub_43254 sub_46594 sub_55177 sub_551a3 sub_6e5a4 sub_72f95 sub_7583a swf4_scan_bytes             |
   |                  | swf4restart swf5_scan_bytes swf5restart swf_ShapeSetLine swf_WriteTag use_asset write_asset       |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | enumerateUsedIDs extractTag main png_load png_write_palette_based2 writeABC                       |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | zlib_error                                                                                        |
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | tshark-2.6.0     | Forbidden:                                                                                        |
+  | tshark-2.6.0     | **Forbidden:**                                                                                    |
   |                  | __errno_location exit fclose ferror fflush fopen fputc fputs                                      |
   |                  | fwrite getenv putchar puts rename setlocale ungetc                                                |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | copy_filter_list flow_exit iostat_init phs_draw                                                   |
   |                  | sub_101da sub_119b7 sub_11d83 sub_154b0 sub_2086e sub_20e3b sub_20ec9 sub_20edc                   |
   |                  | sub_20eea sub_27930 sub_28f00 sub_29bd0 tree_traverse_pre_order.constprop.0                       |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | iostat_draw main sub_101fd sub_2e750                                                              |
   |                  |                                                                                                   |
   |                  |                                                                                                   |
-  |                  | Null pointer dereference:                                                                         |
+  |                  | **Null pointer dereference:**                                                                     |
   |                  | |-----------------------------------|                                                             |
   |                  | | Address   | Function              |                                                             |
   |                  | |-----------|-----------------------|                                                             |
@@ -531,25 +531,25 @@
   |                  | |-----------|-----------------------|                                                             |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | wav2swf-0.9.2    | Forbidden:                                                                                        |
+  | wav2swf-0.9.2    | **Forbidden:**                                                                                    |
   |                  | __errno_location ctime exit fclose fflush fopen fprintf fputc fread fseek ftell fwrite            |
   |                  | getenv perror printf putchar puts rename sprintf time                                             |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | args_callback_longoption enumerateUsedIDs input sub_11494 sub_13d39 sub_caa3 sub_db7e             |
   |                  | sub_dbee swf4_scan_bytes swf4restart swf5_scan_bytes swf5restart swf_WriteTag                     |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | enumerateUsedIDs                                                                                  |
   |                  |                                                                                                   |
-  |                  | Non-structured:                                                                                   |
+  |                  | **Non-structured:**                                                                               |
   |                  | zlib_error                                                                                        |
   |                  |                                                                                                   |
   |                  |                                                                                                   |
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | wpa_cli-2.2      | Forbidden:                                                                                        |
+  | wpa_cli-2.2      | **Forbidden:**                                                                                    |
   |                  | __errno_location atoi exit fclose fflush fopen fprintf fread fseek ftell getenv gmtime            |
   |                  | localtime mktime perror printf putchar puts signal system vprintf                                 |
   |                  |                                                                                                   |
@@ -563,14 +563,14 @@
   |                  |                                                                                                   |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  |wpa_supplicant-2.2| Forbidden:                                                                                        |
+  |wpa_supplicant-2.2| **Forbidden:**                                                                                    |
   |                  | __errno_location abort atoi exit fclose fgets fopen fprintf fputc fread fseek ftell               |
   |                  | fwrite gmtime localtime mktime perror printf putchar puts signal vprintf                          |
   |                  |                                                                                                   |
-  |                  | Recursive:                                                                                        |
+  |                  | **Recursive:**                                                                                    |
   |                  | eapol_sm_step sub_88c42 wpa_driver_nl80211_scan wpas_set_pkcs11_engine_and_module_path            |
   |                  |                                                                                                   |
-  |                  | Complexity (> 50):                                                                                |
+  |                  | **Complexity (> 50):**                                                                            |
   |                  | nl80211_connect_common print_bss_info wpa_config_get_cred_no_key wpa_config_set_cred              |
   |                  | wpa_config_write_global wpa_driver_nl80211_set_ap wpa_sm_rx_eapol                                 |
   |                  | wpa_supplicant_ctrl_iface_process wpa_supplicant_req_sched_scan wpa_supplicant_scan               |
