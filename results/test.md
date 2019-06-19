@@ -1,7 +1,3 @@
-<!DOCTYPE html>
-<html>
-  <body>
-
     <table style="width:100%">
       <tr>
         <th>Artifacts</th>
@@ -113,6 +109,3 @@
           </table>
 
     </table>
-
-  </body>
-</html>
