@@ -10,40 +10,33 @@ Our results
       <tr>
         <td>httpd-2.4.18</td>
         <td>
-          <h3>Forbidden:</h3>
-          __errno_location abort atoi atol exit fprintf freopen getenv printf putchar puts sscanf
+          Forbidden:
+            __errno_location abort atoi atol exit fprintf freopen getenv printf putchar puts sscanf
 
-          <h3>Recursive:</h3>
-          <pre>
+          Recursive:
             ap_abort_on_oom ap_add_module_commands ap_die ap_rgetline_core
             ap_rxplus_exec ap_soak_end_container ap_strcasecmp_match ap_strcmp_match
             child_main clean_child_exit count_directives_sub parse_errorlog_item
             process_resource_config_fnmatch process_resource_config_nofnmatch sub_43e8ec sub_4404b0
             sub_45aa86 sub_45da01 sub_478d3d sub_48384a
             sub_483ce2 sub_486162
-          </pre>
 
-          <h3>Complexity:</h3>
-          <pre>
+          Complexity:
             ap_core_output_filter ap_directory_walk ap_get_mime_headers_core ap_http_filter
             ap_process_async_request ap_process_request_internal ap_read_request
             ap_scan_script_header_err_core_ex ap_select_protocol ap_set_byterange
             ap_setup_client_block basic_http_header default_handler event_check_config
             log_error_core sub_483ce2
-          </pre>
         </td>
       </tr>
       <tr>
         <td>libbfd-2.31.1</td>
         <td>
-          <h3>Forbidden:</h3>
-          <pre>
+          Forbidden:
             __errno_location abort ctime exit fclose ferror fflush fprintf fputc fputs fread fwrite
             getenv printf sprintf sscanf time vfprintf
-          </pre>
 
-          <h3>Recursive:</h3>
-          <pre>
+          Recursive:
             _bfd_archive_64_bit_slurp_armap _bfd_coff_final_link _bfd_coff_gc_mark.part.11.constprop.14
             _bfd_elf_adjust_dynamic_symbol _bfd_elf_compute_section_file_positions _bfd_elf_gc_mark
             _bfd_elf_get_property _bfd_elf_make_section_from_shdr _bfd_elf_write_object_contents
@@ -64,10 +57,8 @@ Our results
             sub_9bd4b sub_9f530 sub_ac1f8 sub_ac220 sub_ad7b6 sub_afb62 sub_b14eb sub_b3ac0
             sub_b4000 sub_b473f sub_b49b8 sub_b4b35 sub_b545e sub_b9fe7 sub_bc4d6 sub_c4618
             sub_c4640 sub_c5bd6 sub_c7f22 sub_c987b sub_d1cd8 sub_e9bb1
-          </pre>
 
-          <h3>Complexity:</h3>
-          <pre>
+          Complexity:
             _bfd_dwarf2_find_nearest_line _bfd_elf_discard_section_eh_frame _bfd_elf_map_sections_to_segment
             _bfd_elf_merge_symbol _bfd_elf_slurp_version_tables _bfd_generic_link_output_symbols
             _bfd_link_section_stabs _bfd_merge_sections _bfd_stab_section_find_nearest_line
@@ -84,15 +75,12 @@ Our results
             sub_9d5d2 sub_9f530 sub_a52c9 sub_a60d9 sub_a7ab2 sub_a9de9 sub_aa792 sub_ac4d0
             sub_b0b07 sub_b272d sub_b5baf sub_b6dc9 sub_bb34a sub_bcb04 sub_be4c2 sub_c21d9
             sub_c2b82 sub_c48f0 sub_caadd sub_cd959 sub_d1682 sub_dc4a6 sub_e4b5b
-          </pre>
 
-          <h3>Non-structured:</h3>
-          <pre>
+          Non-structured:
             _bfd_abort sub_bbcc1 sub_e2b51
-          </pre>
 
 
-          <h3>Null pointer dereference:</h3>
+          Null pointer dereference:
           <table style="width:50%">
             <tr>
               <th>Address</th>
