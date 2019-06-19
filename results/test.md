@@ -10,6 +10,7 @@ Our results
       <tr>
         <td>httpd-2.4.18</td>
         <td>
+
           Forbidden:
             __errno_location abort atoi atol exit fprintf freopen getenv printf putchar puts sscanf
 
@@ -79,25 +80,5 @@ Our results
           Non-structured:
             _bfd_abort sub_bbcc1 sub_e2b51
 
-
-          Null pointer dereference:
-          <table style="width:50%">
-            <tr>
-              <th>Address</th>
-              <th>Function</th>
-            </tr>
-            <tr>
-              <td> 0x3524C </td>
-              <td> a </td>
-            </tr>
-            <tr>
-              <td> 0x371D0 </td>
-              <td> b </td>
-            </tr>
-            <tr>
-              <td> 0x6C41E </td>
-              <td> c </td>
-            </tr>
-          </table>
 
     </table>

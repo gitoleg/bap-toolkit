@@ -3,7 +3,7 @@
   |   Artifacts      |                            Checks                                                                 |
   |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | httpd-2.4.18     | **Forbidden:**                                                                                    |
+  | **httpd-2.4.18** | **Forbidden:**                                                                                    |
   |                  | __errno_location abort atoi atol exit fprintf freopen getenv printf putchar puts sscanf           |
   |                  |                                                                                                   |
   |                  | **Recursive:**                                                                                    |
@@ -22,9 +22,8 @@
   |                  | log_error_core sub_483ce2                                                                         |
   |                  |                                                                                                   |
   |                  |                                                                                                   |
-  |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
-  | libbfd-2.31.1    | **Forbidden:**                                                                                    |
+  |**libbfd-2.31.1** | **Forbidden:**                                                                                    |
   |                  | __errno_location abort ctime exit fclose ferror fflush fprintf fputc fputs fread fwrite           |
   |                  | getenv printf sprintf sscanf time vfprintf                                                        |
   |                  |                                                                                                   |
@@ -79,7 +78,6 @@
   |                  |                                                                                                   |
   |                  |                                                                                                   |
   |                  |                                                                                                   |
-  |------------------|---------------------------------------------------------------------------------------------------|
   |                  |                                                                                                   |
   | lighttpd-1.4.15  | **Forbidden:**                                                                                    |
   |                  | __errno_location abort exit fprintf fputc fputs fwrite getenv gmtime                              |
