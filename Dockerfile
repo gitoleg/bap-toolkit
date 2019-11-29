@@ -2,10 +2,11 @@ FROM binaryanalysisplatform/bap:testing as base
 
 RUN sudo apk add zip python
 
-COPY --chown=opam:nogroup . /bap-toolkit
+COPY . /bap-toolkit
+RUN sudo chown -R opam:nogroup /bap-toolkit
+
 WORKDIR /bap-toolkit
 RUN opam exec -- python makes [build, install]
-
 
 FROM alpine
 RUN apk update && apk add binutils gmp-dev libgcc libstdc++6
