@@ -6,10 +6,10 @@
 ;; there is a loading/storing operation with unchecked and tainted constant
 ;; then we trigger an incident.
 
-;; Dealing with false positives.
+;; Deal with false positives.
 ;; The next considerations are used to reduce false positives.
 ;; 1) Analysis is written with keeping in mind that if a programmer
-;;    checked a pointer somehow - no matter if it was right or not -
+;;    checked a pointer somehow - no matter if it was a correct check or not -
 ;;    then using of the pointer is considered as a safe one. For example,
 ;;    we apply this approach in the next case: mem [RAX + RBX] := 42,
 ;;    when both registers hold zero and only one of them was checked -
@@ -31,7 +31,7 @@
         (intro (dict-get 'intro/location taint)))
     (when (not (is-reported-deref pc))
       (when start
-        (msg "pointer was introduced at $0" start))
+        (msg "pointer was introduced at $0 from taint $1" start taint))
       (notify-null-ptr-dereference start pc)
       (incident-report 'null-ptr-deref (incident-location) intro))))
 
@@ -39,8 +39,7 @@
   (and (not ptr) (all-static-constant ptr)))
 
 (defun is-safe (ptr)
-  (or
-      (taint-get-indirect 'dont-believe ptr)
+  (or (taint-get-indirect 'dont-believe ptr)
       (taint-get-direct 'dont-believe ptr)
       (taint-get-indirect 'failed ptr)
       (taint-get-direct 'failed ptr)))
@@ -48,7 +47,7 @@
 (defun check-deref-null-ptr (ptr)
   (when (is-null ptr)
     (let ((taint (taint-get-direct 'const-ptr ptr))
-          (checked (is-checked-pointer ptr)))
+          (checked (dict-get 'checked-pointer taint)))
       (when (and taint (not (is-safe ptr)) (not checked))
         (taint-introduce-indirectly 'failed ptr 1)
         (taint-introduce-directly   'failed ptr)
@@ -57,16 +56,14 @@
 (defmethod eval-cond (x)
   (let ((taint (taint-get-direct 'const-ptr x)))
     (when taint
-      (mark-taint-as-checked taint))))
-
-(defun is-static-const (x)
-  (and (all-static-constant x) (not (is-initial-value x))))
+      (dict-add 'checked-pointer taint taint))))
 
 (defmethod written (v x)
-  (when (and (is-static-const x) (not (is-flag v)))
-    (let ((taint (taint-introduce-directly 'const-ptr x)))
-      (dict-add 'intro taint (get-current-program-counter))
-      (dict-add 'intro/location taint (incident-location)))))
+  (when (not (taint-get-direct 'const-ptr x))
+        (when (and (is-null x) (not (is-cpu-flag v)))
+          (let ((taint (taint-introduce-directly 'const-ptr x)))
+            (dict-add 'intro taint (get-current-program-counter))
+            (dict-add 'intro/location taint (incident-location))))))
 
 ;; stored method will detach previous indirect taints by the
 ;; address, and we can get a manifestation of the same
@@ -76,8 +73,8 @@
   (let ((known (dict-has 'known-fail (get-current-program-counter))))
     (when known
       (taint-introduce-indirectly 'failed a 1))
-    (when (and (not known) (is-static-const x))
-      (let ((taint (taint-introduce-indirectly 'const-ptr a 1)))
+    (when (and (not known) (is-null x))
+      (let ((taint (taint-introduce-directly 'const-ptr x)))
         (dict-add 'intro taint (get-current-program-counter))
         (dict-add 'intro/location taint (incident-location))))))
 
@@ -89,8 +86,9 @@
       (check-deref-null-ptr ptr))))
 
 (defmethod read (var val)
-  (when (is-return-from-unresolved val)
-    (taint-introduce-directly 'dont-believe val)))
+  (when (is-untrusted-return-value val)
+    (when (not (taint-get-direct 'dont-believe val))
+      (taint-introduce-directly 'dont-believe val))))
 
 (defmethod loading (ptr)
   (check-deref-null-ptr ptr))

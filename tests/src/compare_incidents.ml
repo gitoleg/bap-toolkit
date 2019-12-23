@@ -113,11 +113,11 @@ let log name real ours =
   let tp = Set.inter real ours in
   let fp = Set.diff ours real in
   let fn = Set.diff real ours in
-  let line =
+  let fabula =
     sprintf "%s failed: True-pos/False-pos/False-neg: %d/%d/%d"
       name (Set.length tp) (Set.length fp) (Set.length fn) in
   Out_channel.with_file "toolkit.log" ~append:true ~f:(fun ch ->
-      Out_channel.output_lines ch [line])
+      Out_channel.output_lines ch [fabula])
 
 let print_status name status =
   let margin = 60 in
@@ -129,15 +129,19 @@ let compare_incidents exact real ours =
   if exact then Set.equal real ours
   else Set.equal real tp
 
-let main name real ours exact =
+let main name real ours exact expected =
   let of_ch c = In_channel.with_file c ~f:read in
   let real = of_ch real in
   let ours = of_ch ours in
   let passed = compare_incidents exact real ours in
-  let status =  if passed then "PASS" else "FAILED" in
+  let status =
+    if passed then "PASS"
+    else if expected then "XFAIL"
+    else "FAILED" in
   print_status name status;
   if not passed then
-    let () = log name real ours in
+    log name real ours;
+  if not passed && not expected then
     exit 1
 
 open Cmdliner
@@ -161,10 +165,16 @@ let ours : string Term.t =
 
 let exact : bool Term.t =
   let doc =
-    "Compares incidents exactly, i.e. no False positives permitted " in
+    "Compares incidents exactly, i.e. no False positives permitted" in
   Arg.(value & flag & info ["exact"] ~doc)
 
+let expected : bool Term.t =
+  let doc =
+    "Indicates, that it's not a bug if a test is failed, it was expected" in
+  Arg.(value & flag & info ["expect-fail"] ~doc)
+
+
 let prg =
-  Term.(const main $test_name $real $ours $exact), Term.info "compare-incidents" ~doc
+  Term.(const main $test_name $real $ours $exact $expected), Term.info "compare-incidents" ~doc
 
 let _ = Term.eval prg

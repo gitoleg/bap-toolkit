@@ -7,17 +7,15 @@ open Monads.Std
 
 include Self ()
 
-type value = Primus.value
-type machine = Primus.Machine.id
-
 module Machine_id = Monads.Std.Monad.State.Multi.Id
 module Machines = Machine_id.Map
 module Values = Primus.Value.Set
 module Vids = Primus.Value.Id.Set
 module Vid = Primus.Value.Id
 
+type value = Primus.value
+type machine = Primus.Machine.id
 type func = string * addr
-
 type proof = Used | Unused
 
 type state = {
@@ -30,8 +28,7 @@ let state = Primus.Machine.State.declare
     ~uuid:"af66d451-fb62-44c3-9c2a-8969e111ad91"
     (fun _ -> {
          functions  = Map.empty (module Primus.Value.Id);
-         proved     = Map.empty (module Addr);
-       })
+         proved     = Map.empty (module Addr); })
 
 let _, unused =
   Primus.Observation.provide ~inspect:sexp_of_string "unused"
@@ -119,16 +116,16 @@ module HandleUnresolved(Machine : Primus.Machine.S) = struct
 
   let set_zero v =
     match Var.typ v with
-    | Mem _ -> !! ()
     | Imm width ->
       Value.of_int ~width 0 >>= fun x ->
       Interpreter.set v x
+    | _ -> Machine.return ()
 
   let on_unresolved _ =
     Machine.arch >>= function
     | `x86_64 -> set_zero X86_cpu.AMD64.rax
     | `x86 -> set_zero X86_cpu.IA32.rax
-    |  _ -> !! ()
+    |  _ -> Machine.return ()
 
   let init () =  Primus.Linker.unresolved >>> on_unresolved
 end
@@ -161,7 +158,7 @@ module Callsite (Machine : Primus.Machine.S) = struct
 
   let on_jump j =
     match Jmp.kind j with
-    | Goto _ | Int _ | Ret _ -> !! ()
+    | Goto _ | Int _ | Ret _ -> Machine.return ()
     | Call c ->
       Interp.pc >>= fun pc ->
       match Call.target c with
@@ -170,13 +167,11 @@ module Callsite (Machine : Primus.Machine.S) = struct
           ~f:(fun s -> {s with undef = Some pc})
       | Direct tid ->
         Linker.resolve_symbol (`tid tid) >>= function
-        | None -> !! ()
+        | None -> Machine.return ()
         | Some name ->
           Machine.Local.update callsite
             ~f:(fun s ->
                 {calls = Map.set s.calls name pc; undef = None})
-
-
 
   let init() =
     Machine.sequence [
@@ -313,16 +308,33 @@ module Interface(Machine : Primus.Machine.S) = struct
     ]
 end
 
-open Config
+open Bap_main
 
-let enabled = flag "enable" ~doc:"Enables the analysis"
+let enabled =
+  Extension.Configuration.flag
+    ~doc:"Enables the analysis"
+    "enable"
 
-let () = when_ready (fun {get=(!!)} ->
-    if !!enabled then
-      let () = Taints_tracker.init () in
-      List.iter ~f:ident [
-        Primus.Machine.add_component (module Interface);
-        Primus.Machine.add_component (module HandleUnresolved);
-        Primus.Machine.add_component (module Callsite);
-        Primus.Machine.add_component (module Known_subs);
-      ])
+let verbose =
+  Extension.Configuration.parameter
+    ~as_flag:1
+    ~doc:"Level of verbosity. Currently supported
+           1 - prints a result message, if the check passed or not
+           >1 - prints a detail messages, where the problems are"
+    Extension.Type.("dump" %: int)
+    "verbose"
+
+
+let () =
+  let open Extension.Syntax in
+  Extension.declare
+  @@ fun ctxt ->
+  if ctxt --> enabled then
+    begin
+      Taints_tracker.init ();
+      Primus.Machine.add_component (module Interface);
+      Primus.Machine.add_component (module HandleUnresolved);
+      Primus.Machine.add_component (module Callsite);
+      Primus.Machine.add_component (module Known_subs);
+    end;
+  Ok ()
