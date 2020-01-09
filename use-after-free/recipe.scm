@@ -8,7 +8,9 @@
   use-after-free)
 
 (option primus-lisp-add $prefix)
-(option pass with-no-return)
+(option passes
+        with-no-return
+        run)
 
 (option primus-lisp-channel-redirect
   <stdin>:$prefix/stdin
@@ -17,7 +19,6 @@
 (option report-progress)
 (option log-dir log)
 
-(option pass run)
 (option run-entry-points ${entry-points})
 
 (option primus-promiscuous-mode)

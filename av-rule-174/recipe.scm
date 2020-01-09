@@ -4,7 +4,9 @@
 
 (parameter verbosity 1 "verbosity level")
 
-(option pass with-no-return)
+(option passes
+        with-no-return
+        run)
 
 (option primus-lisp-load
         posix
@@ -12,7 +14,6 @@
 
 (option api-path $prefix/api)
 
-(option pass run)
 (option run-entry-points ${entry-points})
 
 (option constant-tracker-enable)

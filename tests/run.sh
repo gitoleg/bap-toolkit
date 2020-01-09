@@ -42,6 +42,20 @@ concepts_run() {
     done
 }
 
+read_descr() {
+    unset check_name
+    unset params
+
+    params=`cat $1 | grep params`
+    params=${params#"params:"}
+    params=`echo $params`
+
+    check_name=`cat $1 | grep name`
+    check_name=${check_name#"name:"}
+    check_name=`echo $check_name`
+}
+
+
 artifacts_run() {
     echo "                         ARTIFACTS (patience!)"
     dir=artifacts
@@ -51,15 +65,22 @@ artifacts_run() {
 
         for recipe in `ls $dir/$arti`; do
             real_incidents=$dir/$arti/$recipe/incidents
+            descr=$dir/$arti/$recipe/descr
 
-            params=
-            if [ -f $dir/$arti/$recipe/parameters ]; then
-                params=`cat $dir/$arti/$recipe/parameters`
-                params=":$params"
+            name=$arti/$recipe
+
+            if [ -f $descr ]; then
+                read_descr $descr
+                if [ "no$params" != "no" ]; then
+                    recipe="$recipe:$params"
+                fi
+                if [ "no$check_name" != "no" ]; then
+                    name=$check_name
+                fi
             fi
 
             bap artifact --recipe=$recipe  > /dev/null 2> /dev/null
-            ./compare-incidents $arti/$recipe $real_incidents incidents
+            ./compare-incidents $name $real_incidents incidents
             rm -f incidents
         done
         rm -f artifact

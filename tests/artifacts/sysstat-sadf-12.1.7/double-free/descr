@@ -1,0 +1,2 @@
+name: CVE-2019-19725
+params: entry-points=check_file_actlst:depth=12000
