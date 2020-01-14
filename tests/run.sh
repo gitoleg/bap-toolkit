@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-XFAILS_CONCEPTS="warn-unused must-check-value"
+XFAILS="warn-unused must-check-value"
 # Reasons:
 # 1) Taint analysis Garbage collector need to be fixed:
 #    the finished observation never reached it, need use halting.
@@ -9,6 +9,8 @@ XFAILS_CONCEPTS="warn-unused must-check-value"
 #    in callsites plugin, since they are not tranfered from the original
 #    argument.
 #
+
+logfile="toolkit.log"
 
 concept_run() {
     recipe=$1
@@ -24,7 +26,7 @@ concept_run() {
     bap $binary --recipe=$recipe $api > /dev/null 2> /dev/null
 
     expected_fail=""
-    for c in $XFAILS_CONCEPTS; do
+    for c in $XFAILS; do
         if [ "expected$c" = "expected$recipe" ]; then
             expected_fail="--expect-fail"
         fi
@@ -42,17 +44,11 @@ concepts_run() {
     done
 }
 
-read_descr() {
-    unset check_name
-    unset params
-
-    params=`cat $1 | grep params`
-    params=${params#"params:"}
-    params=`echo $params`
-
-    check_name=`cat $1 | grep name`
-    check_name=${check_name#"name:"}
-    check_name=`echo $check_name`
+file_not_found() {
+    bug="ERROR: $1 not found"
+    echo $bug >> $logfile
+    echo ""   >> $logfile
+    echo $bug
 }
 
 
@@ -61,33 +57,57 @@ artifacts_run() {
     dir=artifacts
 
     for arti in `ls $dir`; do
-        docker run --rm -v `pwd`:/drive binaryanalysisplatform/bap-artifacts:$arti cp /artifact /drive
+        for check in `ls $dir/$arti | grep -v artifact`; do
+            artifact=$dir/$arti/artifact
 
-        for recipe in `ls $dir/$arti`; do
-            real_incidents=$dir/$arti/$recipe/incidents
-            descr=$dir/$arti/$recipe/descr
-
-            name=$arti/$recipe
-
-            if [ -f $descr ]; then
-                read_descr $descr
-                if [ "no$params" != "no" ]; then
-                    recipe="$recipe:$params"
-                fi
-                if [ "no$check_name" != "no" ]; then
-                    name=$check_name
-                fi
+            if [ ! -f $artifact ]; then
+                file_not_found $artifact
+                continue
             fi
 
-            bap artifact --recipe=$recipe  > /dev/null 2> /dev/null
-            ./compare-incidents $name $real_incidents incidents
+            real_incidents=$dir/$arti/$check/incidents
+            run=$dir/$arti/$check/run
+            api=$dir/$arti/$check/api
+
+            if [ ! -f $run ]; then
+                file_not_found $run
+                continue
+            fi
+
+            api_path=
+            if [ -d $api ]; then
+                api_path="--api-path=$api"
+            fi
+
+            recipe=`cat $run`
+
+            cve=`echo $check | grep CVE`
+            if [ "no$cve" = "no" ]; then
+                name=$arti/$check
+            else
+                name=$check
+            fi
+
+            start=`date | cut -d' ' -f4`
+            echo $name $start bap $artifact $recipe $api_path >> toolkit.log
+            bap $artifact $recipe $api_path > /dev/null 2> /dev/null
+            finish=`date | cut -d' ' -f4`
+            echo "$finish finished" >> toolkit.log
+            result=`./compare-incidents $name $real_incidents incidents`
+            echo $result
+            echo "" >> toolkit.log
+
             rm -f incidents
+
         done
-        rm -f artifact
     done
 }
 
 rm -rf log
 rm -f toolkit.log
-concepts_run
+
+start=`date | cut -d' ' -f4`
+echo "started at $start" >> toolkit.log
+#concepts_run
+echo ""
 artifacts_run
