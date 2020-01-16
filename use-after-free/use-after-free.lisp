@@ -3,6 +3,8 @@
 (defmethod call (name ptr)
   (when (and ptr (= name 'free)
              (not (= ptr *malloc-zero-sentinel*)))
+    (when (not (memcheck-is-in-heap 'malloc ptr))
+      (memcheck-acquire 'malloc ptr 1))
     (memcheck-release 'malloc ptr)))
 
 (defmethod loaded (ptr)

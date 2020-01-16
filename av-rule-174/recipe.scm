@@ -1,7 +1,6 @@
 (parameter depth 4096 "a depth of analysis")
 (parameter entry-points all-subroutines "where to search")
 (parameter optimization 2 "optimization level")
-
 (parameter verbosity 1 "verbosity level")
 
 (option passes
@@ -17,7 +16,7 @@
 (option run-entry-points ${entry-points})
 
 (option constant-tracker-enable)
-
+(option report-progress)
 (option null-ptr-deref-enable)
 (option null-ptr-deref-verbose $verbosity)
 

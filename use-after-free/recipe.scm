@@ -1,6 +1,8 @@
 (parameter depth 4096 "a depth of analysis")
 (parameter entry-points all-subroutines "where to search")
 (parameter optimization 0 "optimization level")
+(parameter visits 128 "maximum number of executions of the same block")
+
 
 (option primus-lisp-load
   posix
@@ -25,6 +27,7 @@
 (option primus-greedy-scheduler)
 (option primus-print-output incidents)
 (option primus-limit-max-length $depth)
+(option primus-limit-max-visited $visits)
 
 (option primus-print-obs
   exception

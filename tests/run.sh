@@ -23,6 +23,19 @@ update_status() {
     fi
 }
 
+run_bap() {
+    name=$1
+    binary=$2
+    recipe=$3
+    api_path=$4
+    start=`date | cut -d' ' -f4`
+    echo $name: $start bap $binary --recipe=$recipe $api_path >> $logfile
+    bap $binary --recipe=$recipe $api_path > /dev/null 2> /dev/null
+    finish=`date | cut -d' ' -f4`
+    echo "$finish finished" >> $logfile
+    echo "" >> $logfile
+}
+
 
 litmuses_run() {
     echo "                             LITMUS TESTS"
@@ -38,7 +51,8 @@ litmuses_run() {
         else
             api=""
         fi
-        bap $binary --recipe=$name $api > /dev/null 2> /dev/null
+
+        run_bap $name $binary $name $api
 
         expected_fail=""
         for c in $XFAILS; do
@@ -100,18 +114,13 @@ artifacts_run() {
                 name=$check
             fi
 
-            start=`date | cut -d' ' -f4`
-            echo $name $start bap $artifact --recipe=$recipe $api_path >> toolkit.log
-            bap $artifact --recipe=$recipe $api_path > /dev/null 2> /dev/null
-            finish=`date | cut -d' ' -f4`
-            echo "$finish finished" >> toolkit.log
+            run_bap $name $artifact $recipe $api_path
+
             result=`./compare-incidents $name $expected_incidents incidents`
             echo $result
             update_status "$result"
-            echo "" >> toolkit.log
 
             rm -f incidents
-
         done
     done
 }
