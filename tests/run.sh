@@ -11,36 +11,48 @@ XFAILS="warn-unused must-check-value"
 #
 
 logfile="toolkit.log"
+litmuses="litmus-tests"
+status=OK
 
-concept_run() {
-    recipe=$1
-    binary=concepts/bin/$1
-    data=concepts/data/$1
-    real_incidents=$data/incidents
-
-    if [ -d $data/api ]; then
-        api="--api-path=$data/api"
-    else
-        api=""
-    fi
-    bap $binary --recipe=$recipe $api > /dev/null 2> /dev/null
-
-    expected_fail=""
-    for c in $XFAILS; do
-        if [ "expected$c" = "expected$recipe" ]; then
-            expected_fail="--expect-fail"
+update_status() {
+    if [ ! "is$status" = "isFAIL" ]; then
+        result=`echo $1 | grep -v XFAIL | grep FAIL`
+        if [ ! "OK$result" = "OK" ]; then
+            status=FAIL
         fi
-    done
-
-    ./compare-incidents $1 $real_incidents incidents --exact $expected_fail
-    rm -f incidents
+    fi
 }
 
-concepts_run() {
-    echo "                              CONCEPTS"
 
-    for f in `ls concepts/bin`; do
-        concept_run $f
+litmuses_run() {
+    echo "                             LITMUS TESTS"
+
+    for name in `ls litmus-tests/bin`; do
+
+        binary=$litmuses/bin/$name
+        data=$litmuses/data/$name
+        expected_incidents=$data/expected
+
+        if [ -d $data/api ]; then
+            api="--api-path=$data/api"
+        else
+            api=""
+        fi
+        bap $binary --recipe=$name $api > /dev/null 2> /dev/null
+
+        expected_fail=""
+        for c in $XFAILS; do
+            if [ "expected$c" = "expected$name" ]; then
+                expected_fail="--expect-fail"
+            fi
+        done
+
+        result=`./compare-incidents $name $expected_incidents incidents --exact $expected_fail`
+        echo $result
+        update_status "$result"
+
+        rm -f incidents
+
     done
 }
 
@@ -65,7 +77,7 @@ artifacts_run() {
                 continue
             fi
 
-            real_incidents=$dir/$arti/$check/incidents
+            expected_incidents=$dir/$arti/$check/expected
             run=$dir/$arti/$check/run
             api=$dir/$arti/$check/api
 
@@ -89,12 +101,13 @@ artifacts_run() {
             fi
 
             start=`date | cut -d' ' -f4`
-            echo $name $start bap $artifact $recipe $api_path >> toolkit.log
-            bap $artifact $recipe $api_path > /dev/null 2> /dev/null
+            echo $name $start bap $artifact --recipe=$recipe $api_path >> toolkit.log
+            bap $artifact --recipe=$recipe $api_path > /dev/null 2> /dev/null
             finish=`date | cut -d' ' -f4`
             echo "$finish finished" >> toolkit.log
-            result=`./compare-incidents $name $real_incidents incidents`
+            result=`./compare-incidents $name $expected_incidents incidents`
             echo $result
+            update_status "$result"
             echo "" >> toolkit.log
 
             rm -f incidents
@@ -108,6 +121,14 @@ rm -f toolkit.log
 
 start=`date | cut -d' ' -f4`
 echo "started at $start" >> toolkit.log
-#concepts_run
+litmuses_run
 echo ""
 artifacts_run
+echo ""
+
+if [ "is$status" = "isFAIL" ]; then
+    echo "Some tests FAILED"
+    exit 1
+fi
+
+echo "OK"
