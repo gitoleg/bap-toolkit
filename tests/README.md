@@ -1,7 +1,8 @@
 
 # Intro
 
-We base our tests on the incidents comparison, and check new obtained incidents against the expected ones.
+Tests are based on the incidents comparison: a new obtained set of incidents is
+compared with an expected one.
 There are the next three possible outcomes of the comparison:
 - false positive is a presence of an incident when there is no confirmed bug in the code.
 - false negative is an absence of an incident when there is a confirmed bug in the code.
@@ -35,21 +36,43 @@ For instance, the litmus for null pointer dereference contains two cases:
 11.    b = *x;
 12. }
 ```
-Our approach to this check is that if a pointer was checked - even
-in wrong way, like in the example above - then the usage of the pointer is
-considered as a safe one.
-And vice versa - if there was no check on the pointer, before derefence                                                                 then we trigger an incident.
-Thus, if we have an incident by an address corresponded to line '5',
-we consider it as a false positive, meaning something went wrong.
-The same, if we don't have an incident on line `11`, we consider is
+Our approach to this check is that if a pointer was checked - even in wrong way, like in the example
+above - then the usage of the pointer is considered as a safe one. And vice versa - if there was no
+check on the pointer, before derefence then we trigger an incident.
+Thus, if we have an incident by an address corresponded to line '5', we consider it as a false positive,
+meaning something went wrong. The same, if we don't have an incident on line `11`, we consider is
 as false negative - and again it means that we have a bug in our implementation.
 (or tests are outdated and need to be reviewed).
 
+### Adding a new litmus
+To add a new litmus test for the check named `foo`, one need to:
+1) add a source code to `tests/litmus-tests/src/foo.c`
+2) add a binary to `tests/litmus-tests/bin/foo`
+3) add expected incidents into `tests/litmus-tests/data/foo/expected`
+
 
 ## Artifacts
-Artifacts are more complex programs then out litmuses and therefore it's harder
-to find a bug there. And that's why they are quite useful for us.
-Some of them were taken from Juliet test set, some of them are real programs with
-known bugs. Given that, we slightly relax our comparison rules and allow checks
-to triger false positivites, though the bugs must be still discovered,
-i.e. expected incidents must be a subset of the new obtained incidents.
+Artifacts are more complex programs then litmuses and therefore it's harder to find a bug there.
+Some of them were taken from Juliet test set, some of them are real programs with known bugs.
+Given that, we slightly relax our comparison rules and allow checks to triger false positivites,
+though the bugs must be still discovered, i.e. expected incidents must be a subset of the new obtained
+incidents.
+
+### Adding a new artifact
+
+Although we can customize it in future, but right now tests depend on the
+`binaryanalysisplatform/bap-artifacts` docker hub repository, where each artifact is represented by a tag,
+e.g.: `binaryanalysisplatform/bap-artifacts:cron-3.0pl1-127`.
+
+Basicaly, to add a new artifact `foo` one need to:
+1) make `docker push binaryanalysisplatform/bap-artifacts:foo`
+2) create a folder `tests/artifacts/foo`
+3) create a subfolder with a desired check name (it's used for display purposes only), e.g. `tests/artifacts/foo/BAR`
+4) create a `tests/artifacts/foo/BAR/run` file with parameters to `bap --recipe=` option
+5) create a `tests/artifacts/foo/BAR/expected` file expected incidents
+
+Each artifact can contain more than one check, e.g. `libssh-0.5.2`.
+
+# Log
+For the debug purposes, log is stored in `tests/toolkit.log` file, which contains basic
+information for every check: time started/finished, status, missed incidents if any.
