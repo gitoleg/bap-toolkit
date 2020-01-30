@@ -33,7 +33,26 @@ run_bap() {
     bap $binary --recipe=$recipe $api_path > /dev/null 2> /dev/null
     finish=`date | cut -d' ' -f4`
     echo "$finish finished" >> $logfile
+}
+
+compare() {
+    name=$1
+    expected_incidents=$2
+    exact=$3
+
+    expected_fail=""
+
+    for c in $XFAILS; do
+        if [ "expected$c" = "expected$name" ]; then
+            expected_fail="--expect-fail"
+        fi
+    done
+
+    result=`./compare-incidents $name $expected_incidents incidents $exact $expected_fail`
     echo "" >> $logfile
+    echo $result
+
+    update_status "$result"
 }
 
 
@@ -53,17 +72,7 @@ litmuses_run() {
         fi
 
         run_bap $name $binary $name $api
-
-        expected_fail=""
-        for c in $XFAILS; do
-            if [ "expected$c" = "expected$name" ]; then
-                expected_fail="--expect-fail"
-            fi
-        done
-
-        result=`./compare-incidents $name $expected_incidents incidents --exact $expected_fail`
-        echo $result
-        update_status "$result"
+        compare $name $expected_incidents "--exact"
 
         rm -f incidents
 
@@ -115,11 +124,10 @@ artifacts_run() {
             fi
 
             run_bap $name $artifact $recipe $api_path
+            compare $name $expected_incidents
 
-            result=`./compare-incidents $name $expected_incidents incidents`
-            echo $result
-            update_status "$result"
 
+#            cp incidents $name.incs
             rm -f incidents
         done
     done

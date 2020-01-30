@@ -3,11 +3,9 @@
 (parameter optimization 0 "optimization level")
 (parameter visits 128 "maximum number of executions of the same block")
 
-
 (option primus-lisp-load
-  posix
-  memcheck
-  use-after-free)
+        posix
+        use-after-free)
 
 (option primus-lisp-add $prefix)
 (option passes

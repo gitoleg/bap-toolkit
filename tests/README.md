@@ -11,7 +11,7 @@ There are the next three possible outcomes of the comparison:
 An expected incident is such one that was checked manually and points to the real bug, i.e.
 is a real true positivite.
 
-Tests are devided into two categories: litmuses and artifacts.
+Tests are devided into the two categories: litmuses and artifacts.
 
 
 ## Litmus tests

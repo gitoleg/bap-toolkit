@@ -15,9 +15,9 @@ type info =
 [@@deriving bin_io, compare,sexp]
 
 type incident = {
-    name : string;
-    info : info;
-  }
+  name : string;
+  info : info;
+}
 [@@deriving bin_io, compare,sexp]
 
 module Incident = struct
@@ -58,11 +58,11 @@ module Parse = struct
     let open Sexp in
     match s with
     | List (Atom "incident-location" :: List [Atom id; List points] :: _)  ->
-       Option.map (last_addr points) ~f:(fun p -> Incident_location (id, p))
+      Option.map (last_addr points) ~f:(fun p -> Incident_location (id, p))
     | List (Atom "incident" :: List (Atom name :: locs) :: _) ->
-       Incident (name, locs_of_sexps locs) |> Option.some
+      Incident (name, locs_of_sexps locs) |> Option.some
     | List (Atom "incident-static" :: List (Atom name :: data) :: _)  ->
-       Incident_static (name, Sexp.to_string (List data)) |> Option.some
+      Incident_static (name, Sexp.to_string (List data)) |> Option.some
     | _ -> None
 
   let of_sexp s =
@@ -101,11 +101,12 @@ module Log = struct
       sprintf "%s failed: True-pos/False-pos/False-neg: %d/%d/%d"
         check_name (Set.length tp) (Set.length fp) (Set.length fn) in
     Out_channel.with_file logfile ~append:true ~f:(fun ch ->
-        Out_channel.output_lines ch [fabula; "  The following incidents missed"];
+        Out_channel.output_lines ch
+          [fabula; "  The following incidents are missed"];
         let missed =
           Set.fold ~init:[] fn ~f:(fun acc inc ->
               let inc = sprintf "  %s"
-                          (Sexp.to_string (sexp_of_incident inc)) in
+                  (Sexp.to_string (sexp_of_incident inc)) in
               inc :: acc) in
         Out_channel.output_lines ch missed)
 
@@ -195,7 +196,7 @@ The latter one is assigned if incidents don't match each other and
 let test_name : string Term.t =
   let doc = "Name of the test to do" in
   Arg.(required & pos 0 (some string) None &
-         info [] ~doc ~docv:"NAME")
+       info [] ~doc ~docv:"NAME")
 
 let real : string Term.t =
   let doc = "File with real(proven) incidents" in
@@ -205,7 +206,7 @@ let real : string Term.t =
 let ours : string Term.t =
   let doc = "File with new incidents" in
   Arg.(required & pos 2 (some string) None &
-         info [] ~doc ~docv:"FILE")
+       info [] ~doc ~docv:"FILE")
 
 let exact : bool Term.t =
   let doc =

@@ -31,18 +31,6 @@
 (option optimization-level $optimization)
 
 (option primus-print-obs
-        ;; all
-        ;; -enter-exp
-        ;; -leave-exp
-        ;; -const
-        ;; -extract
-        ;; -concat
-        ;; -loading
-        ;; -storing
-        ;; -writing
-        ;; -reading
-        ;; -binop
-        ;; -unop)
   exception
   pc-changed
   jumping
