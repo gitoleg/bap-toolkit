@@ -126,8 +126,6 @@ artifacts_run() {
             run_bap $name $artifact $recipe $api_path
             compare $name $expected_incidents
 
-
-#            cp incidents $name.incs
             rm -f incidents
         done
     done

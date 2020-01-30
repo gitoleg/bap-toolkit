@@ -78,7 +78,7 @@ For the debug purposes, log is stored in `tests/toolkit.log` file, which contain
 information for every check: time started/finished, status, missed incidents if any.
 
 
-## Expected results
+# Expected results
 
 ```
                              LITMUS TESTS

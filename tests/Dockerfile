@@ -1,10 +1,10 @@
-FROM binaryanalysisplatform/bap:testing as base
+FROM gitoleg/bap:dev as base
 
 COPY --chown=opam:nogroup src /src
 WORKDIR /src
 RUN eval "$(opam env)" && make build
 
-FROM binaryanalysisplatform/bap-toolkit:testing as toolkit
+FROM gitoleg/bap-toolkit:dev as toolkit
 
 COPY . /tests
 WORKDIR /tests
@@ -19,4 +19,5 @@ COPY --from=binaryanalysisplatform/bap-artifacts:libgd-2.2.5 /artifact artifacts
 COPY --from=binaryanalysisplatform/bap-artifacts:libssh-0.5.2 /artifact artifacts/libssh-0.5.2
 COPY --from=binaryanalysisplatform/bap-artifacts:ntpd-4.2.8p12 /artifact artifacts/ntpd-4.2.8p12
 COPY --from=binaryanalysisplatform/bap-artifacts:tcpreplay-4.3.1 /artifact artifacts/tcpreplay-4.3.1
-RUN sh run.sh
+
+ENTRYPOINT ["sh", "run.sh"]
