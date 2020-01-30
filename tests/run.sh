@@ -127,6 +127,7 @@ artifacts_run() {
             compare $name $expected_incidents
 
             rm -f incidents
+
         done
     done
 }
