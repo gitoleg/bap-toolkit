@@ -19,7 +19,7 @@ gen() {
 
     done
 
-    echo "RUN sh run.sh"
+    echo "CMD [\"sh\", \"run.sh\"]"
 }
 
 gen > Dockerfile
