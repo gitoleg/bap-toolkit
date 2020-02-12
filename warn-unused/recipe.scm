@@ -3,6 +3,7 @@
 
 (option primus-lisp-load
         warn-unused-result
+        limit-malloc
         posix)
 
 (option passes

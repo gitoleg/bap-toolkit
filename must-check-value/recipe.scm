@@ -3,8 +3,9 @@
 (parameter verbosity 1 "the level of verbosity")
 
 (option primus-lisp-load
-  posix
-  must-check-value)
+        posix
+        limit-malloc
+        must-check-value)
 
 (option primus-lisp-add $prefix)
 

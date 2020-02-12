@@ -3,8 +3,9 @@
 (parameter optimization 0 "optimization level")
 
 (option primus-lisp-load
-  posix
-  memcheck-malloc)
+        posix
+        limit-malloc
+        memcheck-malloc)
 
 (option primus-lisp-add $prefix)
 

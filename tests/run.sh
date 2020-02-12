@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-XFAILS="warn-unused must-check-value"
+XFAILS=""
 # Reasons:
 # 1) Taint analysis Garbage collector need to be fixed:
 #    the finished observation never reached it, need use halting.
@@ -8,6 +8,7 @@ XFAILS="warn-unused must-check-value"
 # 2) Also, warn-unused may fail because we need to fix attributes on
 #    in callsites plugin, since they are not tranfered from the original
 #    argument.
+# 3) use-aftre-free and double free require a new realloc model
 #
 
 logfile="toolkit.log"
@@ -28,10 +29,10 @@ run_bap() {
     binary=$2
     recipe=$3
     api_path=$4
-    start=`date | cut -d' ' -f4`
+    start=`date +%T`
     echo $name: $start bap $binary --recipe=$recipe $api_path >> $logfile
     bap $binary --recipe=$recipe $api_path > /dev/null 2> /dev/null
-    finish=`date | cut -d' ' -f4`
+    finish=`date +%T`
     echo "$finish finished" >> $logfile
 }
 
@@ -135,7 +136,7 @@ artifacts_run() {
 rm -rf log
 rm -f toolkit.log
 
-start=`date | cut -d' ' -f4`
+start=`date +%T`
 echo "started at $start" >> toolkit.log
 litmuses_run
 echo ""

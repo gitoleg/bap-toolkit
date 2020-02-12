@@ -4,8 +4,9 @@
 (parameter optimization 0 "optimization level")
 
 (option primus-lisp-load
-  posix
-  double-free)
+        posix
+        limit-malloc
+        double-free)
 
 (option primus-lisp-add $prefix)
 

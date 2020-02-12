@@ -9,6 +9,7 @@
 
 (option primus-lisp-load
         posix
+        limit-malloc
         check-deref)
 
 (option api-path $prefix/api)

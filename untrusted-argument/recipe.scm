@@ -2,9 +2,10 @@
 (parameter entry-points all-subroutines "where to search")
 
 (option primus-lisp-load
-  posix
-  taint-sources
-  sensitive-sinks)
+        posix
+        limit-malloc
+        taint-sources
+        sensitive-sinks)
 
 (option primus-lisp-add $prefix)
 

@@ -3,6 +3,7 @@
 (parameter verbosity 1 "verbosity level")
 
 (option primus-lisp-load
+        limit-malloc
         unused-return
         posix)
 

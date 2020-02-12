@@ -2,6 +2,7 @@
 (parameter entry-points all-subroutines "where to search")
 
 (option primus-lisp-load
+        limit-malloc
         posix
         restrict)
 

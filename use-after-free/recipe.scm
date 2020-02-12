@@ -5,6 +5,7 @@
 
 (option primus-lisp-load
         posix
+        limit-malloc
         use-after-free)
 
 (option primus-lisp-add $prefix)

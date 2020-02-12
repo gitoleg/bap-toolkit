@@ -1,27 +1,3 @@
-;;
-;; The algorithm itself is quite simple:
-;; We taint every static zero that is saved into a register or a memory location
-;; via stored/written methods. If the taint reaches any condition then we
-;; consider this constant checked and no worries needed. Finally, if
-;; there is a loading/storing operation with unchecked and tainted constant
-;; then we trigger an incident.
-;;
-;; Deal with false positives.
-;; The next considerations are used to reduce false positives.
-;; 1) Analysis is written with keeping in mind that if a programmer
-;;    checked a pointer somehow - no matter if it was a correct check or not -
-;;    then using of the pointer is considered as a safe one. For example,
-;;    we apply this approach in the next case: mem [RAX + RBX] := 42,
-;;    when both registers hold zero and only one of them was checked -
-;;    in this case no incident will be emited
-;; 2) unresolved calls: we don't know, if an unresolved function
-;;    returns anything or not, hence we need to taint a value in
-;;    the abi-specific register which is responsible for the return
-;;    argument and not use it as a source of incidents.
-;; 3) If any subroutine wasn't visited in the current path because it
-;;    was visited in the other, we need to drop its result.
-;;
-
 (require taint)
 
 (defun notify-null-deref (taint)
