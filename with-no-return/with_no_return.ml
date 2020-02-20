@@ -12,10 +12,14 @@ type graph = {
   itself : G.t;
 }
 
+type dest =
+  | Intra of tid option
+  | Inter of label * label option
+
 type subroutine = {
-  tid   :  tid;
+  tid   : tid;
   graph : graph;
-  callees : tid list Tid.Map.t;
+  dests : dest list Tid.Map.t;
 }
 
 (** [make_no_return g blk] removes edge to a
@@ -29,46 +33,42 @@ let make_no_return g blk =
   let itself = G.Edge.(insert (create blk g.no_ret g.no_ret) itself) in
   { g with itself }
 
-let find_callees dests  =
-  List.filter_map dests ~f:(function
-      | `Call (Some x,_) -> Some x
-      | _ -> None)
-
 (** [update norets sub] updates sub's graph, so
     any edge to function in [norets] will be replaced
     with an edge to synthetic no-return node *)
 let update no_rets sub =
-  let graph = Map.fold sub.callees ~init:sub.graph
-      ~f:(fun ~key:blk ~data:callees init ->
-          List.fold callees
-            ~init ~f:(fun g callee ->
-                if Set.mem no_rets callee then
-                  make_no_return g blk
-                else g)) in
+  let graph = Map.fold sub.dests ~init:sub.graph
+      ~f:(fun ~key:blk ~data:dests g ->
+          match dests with
+          | Inter (Direct x,_) :: _ when Set.mem no_rets x ->
+            make_no_return g blk
+          | _ -> g) in
   {sub with graph}
 
-let callees_of_block b =
-  Term.to_sequence jmp_t b |>
-  Seq.fold ~init:[] ~f:(fun acc j ->
-      match Jmp.kind j with
-      | Int _ | Ret _ | Goto _ -> acc
-      | Call c -> match Call.target c with
-        | Indirect _ -> acc
-        | Direct t -> t :: acc)
+let dest_of_jmp j =
+  match Jmp.kind j with
+  | Int (_,x) | Goto Direct x | Ret Direct x -> Intra (Some x)
+  | Ret _ | Goto _ -> Intra None
+  | Call c -> Inter (Call.target c, Call.return c)
 
-let collect_callees sub =
+let dests_of_block b =
+  Term.to_sequence jmp_t b |>
+  Seq.fold ~init:[] ~f:(fun acc j -> dest_of_jmp j :: acc) |>
+  List.rev
+
+let collect_destinations sub =
   Term.to_sequence blk_t sub |>
   Seq.fold ~init:(Map.empty (module Tid))
-    ~f:(fun (dests) b ->
-        Map.set dests (Term.tid b) (callees_of_block b))
+    ~f:(fun dests b ->
+        Map.set dests (Term.tid b) (dests_of_block b))
 
 let of_sub s =
-  let callees = collect_callees s in
+  let dests = collect_destinations s in
   let no_ret = Tid.create () in
   let graph =
     G.Edge.(insert (create no_ret G.exit no_ret) (Sub.to_graph s)) in
   let graph = {itself=graph; no_ret} in
-  {tid = Term.tid s; graph; callees;}
+  {tid = Term.tid s; graph; dests;}
 
 let map no_returns prog =
   (object
