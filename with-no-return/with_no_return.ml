@@ -54,6 +54,25 @@ let of_sub sub =
   let calls = calls_of_sub sub in
   {tid = Term.tid sub; graph; indirect; calls}
 
+let update s tid =
+  match Map.find s.calls tid with
+  | None -> s
+  | Some edges ->
+    let graph = List.fold edges ~init:g
+        ~f:(fun g (blk,lbl) ->
+            let g, maybe_unreachable =
+              G.Node.outputs blk g |>
+              Seq.fold ~init:(g, []) ~f:(fun (g, unr) e ->
+                  if Tid.equal (G.Edge.label e) lbl then
+                    G.Edge.remove e g, G.Edge.dst e :: unr
+                  else g, unr) in
+            List.fold ~init:g maybe_unreachable ~f:(fun g blk ->
+                if G.Node.degree ~dir:`Out blk g = 0 then
+                  G.Edge.(insert (create s.indirect blk s.indirect) g)
+                else g)) in
+    { s with graph }
+
+
 let update norets s =
   if Set.inter s.calls norets = Set.empty
   then s
