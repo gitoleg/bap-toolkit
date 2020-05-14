@@ -1,5 +1,6 @@
 PKG core_kernel
 PKG bap
+PKG ppx_jane
 
 S .
 B _build
