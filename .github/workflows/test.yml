@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Hello world action step
-        uses: ./.github/actions/toolkit-tests # Uses an action in the root directory
+        uses: ./.github/test-toolkit # Uses an action in the root directory
 
 
 
