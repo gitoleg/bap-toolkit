@@ -1,0 +1,9 @@
+me: Test
+
+on:
+  - push
+
+runs:
+  using: 'docker'
+  image: 'tests/Dockerfile'
+
