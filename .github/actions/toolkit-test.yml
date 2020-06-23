@@ -1,0 +1,7 @@
+name: Bap-toolkit tests
+description: "runs bap-toolkit tests"
+
+runs:
+  using: 'docker'
+  image: 'tests/Dockerfile'
+
