@@ -3,5 +3,5 @@ description: "runs bap-toolkit tests"
 
 runs:
   using: 'docker'
-  image: './tests/Dockerfile'
+  image: '../../tests/Dockerfile'
 
