@@ -57,4 +57,5 @@ jobs:
 
       - name: Run tests
         run: |
-          make test
+          cd bap-toolkit
+          opam exec -- make test
