@@ -2,9 +2,8 @@ name: Test
 
 on:
   - push
-  - pull_request
-  - schedule:
-     - cron: '0 18 * * *' # Every day at 18:00 UTC
+#  - schedule:
+#     - cron: '0 18 * * *' # Every day at 18:00 UTC
 
 jobs:
   run-tests:
