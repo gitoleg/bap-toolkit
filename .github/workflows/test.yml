@@ -45,8 +45,9 @@ jobs:
       - name: Checkout toolkit
         uses: actions/checkout@v2
         with:
-          repository: BinaryAnalysisPlatform/bap-toolkit
+          repository: gitoleg/bap-toolkit  #fixit
           path: bap-toolkit
+          ref: adds-test-action #remove it
 
       - name: Install Toolkit
         run: |
