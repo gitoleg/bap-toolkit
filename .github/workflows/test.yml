@@ -1,4 +1,4 @@
-name: Run tests
+name: run-tests
 
 on:
   - push
@@ -41,7 +41,6 @@ jobs:
           opam exec -- ./configure-omake
           opam exec -- make
           opam exec -- make reinstall
-          cd ../
 
       - name: Checkout toolkit
         uses: actions/checkout@v2

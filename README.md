@@ -1,4 +1,4 @@
-![](https://github.com/BinaryAnalysisPlatform/bap-toolkit/workflows/test/badge.svg)
+![](https://github.com/BinaryAnalysisPlatform/bap-toolkit/workflows/run-tests/badge.svg)
 
 # Introduction
 
